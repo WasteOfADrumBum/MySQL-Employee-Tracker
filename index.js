@@ -1,11 +1,15 @@
+/* === || REQUIRED || === */
 const inquirer = require("inquirer");
+// MySQL Connection
 const connection = require("./config/connection");
+// Prompts
 const prompt = require("./config/prompts");
 require("console.table");
 
+/* === || START APPLICATION || === */
 firstPrompt();
 
-// prompts the user for  action
+/* === || INITIAL PROMPT || === */
 function firstPrompt() {
 	inquirer.prompt(prompt.firstPrompt).then(function ({ task }) {
 		switch (task) {
@@ -34,8 +38,7 @@ function firstPrompt() {
 	});
 }
 
-// View Employees
-
+/* === || VIEW EMPLOYEES || === */
 function viewEmployee() {
 	console.log("Viewing employees\n");
 
@@ -58,9 +61,7 @@ function viewEmployee() {
 	});
 }
 
-// View Employees by Department
-// Make a department array
-
+/* === || EMPLOYEE BY DEPARTMENT || === */
 function viewEmployeeByDepartment() {
 	console.log("Viewing employees by department\n");
 
@@ -87,8 +88,7 @@ function viewEmployeeByDepartment() {
 	});
 }
 
-// choose department list, then employees
-
+/* === || PROMPT DEPARTMENT || === */
 function promptDepartment(departmentChoices) {
 	inquirer
 		.prompt([
@@ -121,10 +121,7 @@ function promptDepartment(departmentChoices) {
 		});
 }
 
-// View Employees by Manager
-// Add Employee
-// Make a employee array
-
+/* === || ADD EMPLOYEE || === */
 function addEmployee() {
 	console.log("Inserting an employee!");
 
@@ -134,12 +131,6 @@ function addEmployee() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		// const roleChoices = res.map(({ id, title, salary }) => ({
-		// 	value: id,
-		// 	title: `${title}`,
-		// 	salary: `${salary}`,
-		// }));
-
 		console.table(res);
 		console.log("RoleToInsert!");
 
@@ -147,6 +138,7 @@ function addEmployee() {
 	});
 }
 
+/* === || PROMPT INSERT || === */
 function promptInsert(roleChoices) {
 	inquirer.prompt(prompt.insertEmployee(roleChoices)).then(function (answer) {
 		console.log(answer);
@@ -173,9 +165,7 @@ function promptInsert(roleChoices) {
 	});
 }
 
-// Remove Employees
-// Make a employee array to delete
-
+/* === || REMOVE EMPLOYEE || === */
 function removeEmployees() {
 	console.log("Deleting an employee");
 
@@ -197,8 +187,7 @@ function removeEmployees() {
 	});
 }
 
-// choose employee list, then employee deleted
-
+/* === || PROMPT DELETE || === */
 function promptDelete(deleteEmployeeChoices) {
 	inquirer
 		.prompt([
@@ -223,12 +212,12 @@ function promptDelete(deleteEmployeeChoices) {
 		});
 }
 
-// Update Role
-
+/* === || UPDATE ROLE || === */
 function updateEmployeeRole() {
 	employeeArray();
 }
 
+/* === || ARRAYS || === */
 function employeeArray() {
 	console.log("Updating an employee");
 
@@ -279,6 +268,7 @@ function roleArray(employeeChoices) {
 	});
 }
 
+/* === || PROMPT ROLE || === */
 function promptEmployeeRole(employeeChoices, roleChoices) {
 	inquirer
 		.prompt([
@@ -312,8 +302,7 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
 		});
 }
 
-// Add Role
-
+/* === || ADD ROLE || === */
 function addRole() {
 	var query = `SELECT d.id, d.name, r.salary AS budget
     FROM employee e
@@ -338,6 +327,7 @@ function addRole() {
 	});
 }
 
+/* === || PROMPT ADD ROLE || === */
 function promptAddRole(departmentChoices) {
 	inquirer
 		.prompt([

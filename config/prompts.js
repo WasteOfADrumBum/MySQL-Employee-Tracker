@@ -1,4 +1,5 @@
 module.exports = {
+	/* === || INITIAL PROMPT || === */
 	firstPrompt: {
 		type: "list",
 		name: "task",
@@ -13,6 +14,9 @@ module.exports = {
 			"End",
 		],
 	},
+	/* === || PROMPT DEPARTMENT || === */
+
+	/* === || PROMPT INSERT || === */
 	insertEmployee: (roleChoices) => [
 		{
 			type: "input",
@@ -31,4 +35,10 @@ module.exports = {
 			choices: roleChoices,
 		},
 	],
+
+	/* === || PROMPT DELETE || === */
+
+	/* === || PROMPT ROLE || === */
+
+	/* === || PROMPT ADD ROLE || === */
 };

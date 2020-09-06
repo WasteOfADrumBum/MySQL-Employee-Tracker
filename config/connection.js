@@ -7,11 +7,9 @@ var connection = mysql.createConnection({
 	database: "employeesDB",
 });
 
-// connect to the mysql server and sql database
+// connect to the mysql server and database
 connection.connect(function (err) {
 	if (err) throw err;
-	// run the start function after prompt
-	// firstPrompt();
 });
 
 module.exports = connection;
