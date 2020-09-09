@@ -22,7 +22,7 @@ module.exports = {
 
 			/* === || UPDATE || === */
 			"Update Employee Role", // updateEmployeeRole();
-			// --- ↓ ⚠ Selection Not Updating & Remove NULL as a choic ⚠ ↓ ---
+			// --- ↓ ⚠ Selection Not Updating & Remove NULL as a choice ⚠ ↓ ---
 			"Update Employee Manager", // updateEmployeeManager();
 
 			/* === || REMOVE || === */
