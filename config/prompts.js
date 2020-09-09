@@ -7,7 +7,6 @@ module.exports = {
 		choices: [
 			/* === || VIEW || === */
 			"View Employees", // viewEmployee();
-			// ---------- ↓ ⚠ Remove NULL as a choice ⚠ ↓ ----------
 			"View Employees by Manager", // viewEmployeeByManager();
 			"View Employees by Department", // viewEmployeeByDepartment();
 			"View Departments", // viewDepartments();
@@ -22,7 +21,7 @@ module.exports = {
 
 			/* === || UPDATE || === */
 			"Update Employee Role", // updateEmployeeRole();
-			// --- ↓ ⚠ Selection Not Updating & Remove NULL as a choice ⚠ ↓ ---
+			// --- ↓ ⚠ Selection Not Updating ⚠ ↓ ---
 			"Update Employee Manager", // updateEmployeeManager();
 
 			/* === || REMOVE || === */

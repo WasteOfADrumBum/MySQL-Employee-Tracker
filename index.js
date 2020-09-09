@@ -118,7 +118,6 @@ function viewEmployee() {
 }
 
 /* === || VIEW EMPLOYEE BY MANAGER || === */
-// ---------- ↓ ⚠ Remove NULL as a choice ⚠ ↓ ----------
 function viewEmployeeByManager() {
 	console.log("Viewing managers\n");
 
@@ -132,10 +131,12 @@ function viewEmployeeByManager() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		const managerChoices = res.map(({ manager_id, manager }) => ({
-			value: manager_id,
-			name: manager,
-		}));
+		const managerChoices = res
+			.filter((mgr) => mgr.manager_id)
+			.map(({ manager_id, manager }) => ({
+				value: manager_id,
+				name: manager,
+			}));
 
 		console.table(res);
 		console.log("Management view succeed!\n");
@@ -259,15 +260,22 @@ function viewRoles() {
 }
 
 /* === || VIEW DEPARTMENT BUDGET || === */
-// ---------- ↓ ⚠ Needs Budget Calculation ⚠ ↓ ----------
 function viewDepartmentBudget() {
 	// --- ↓ ⚠ Budget = total salary of each employee in department ⚠ ↓ ---
-	var query = `SELECT * FROM department`;
+	var query = `SELECT d.name, 
+		r.salary, sum(r.salary) AS budget
+		FROM employee e 
+		LEFT JOIN role r ON e.role_id = r.id
+		LEFT JOIN department d ON r.department_id = d.id
+		group by d.name`;
+
 	connection.query(query, function (err, res) {
-		console.log(`DEPARTMENT BUDGETS:`);
+		if (err) throw err;
+
+		console.log(`DEPARTMENT BUDGETS:\n`);
 		res.forEach((department) => {
 			console.log(
-				`\nDepartment: ${department.name}\n Budget: ${department.budget}`,
+				`Department: ${department.name}\n Budget: ${department.budget}\n`,
 			);
 		});
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
@@ -519,12 +527,14 @@ function managerArray(empChoices) {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		mgrChoices = res.map(({ id, manager, title, department }) => ({
-			value: id,
-			name: `${manager}`,
-			title: `${title}`,
-			department: `${department}`,
-		}));
+		mgrChoices = res.map(
+			({ id, first_name, last_name, title, department }) => ({
+				value: id,
+				name: `${first_name} ${last_name}`,
+				title: `${title}`,
+				department: `${department}`,
+			}),
+		);
 
 		console.table(res);
 		console.log("roleArray to Update!");
