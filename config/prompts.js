@@ -22,7 +22,7 @@ module.exports = {
 
 			/* === || UPDATE || === */
 			"Update Employee Role", // updateEmployeeRole();
-			// ---------- ↓ ⚠ not working ⚠ ↓ ----------
+			// --- ↓ ⚠ Selection Not Updating & Remove NULL as a choic ⚠ ↓ ---
 			"Update Employee Manager", // updateEmployeeManager();
 
 			/* === || REMOVE || === */
@@ -92,18 +92,18 @@ module.exports = {
 	],
 
 	/* === || PROMPT MANAGER || === */
-	updateManager: (employeeChoices, managerChoices) => [
+	updateManager: (empChoices, mgrChoices) => [
 		{
 			type: "list",
-			name: "employeeId",
-			message: "Which employee do you want to set with the manager?",
-			choices: employeeChoices,
+			name: "employeeID",
+			message: "Which employee do you want to assign a new manager?",
+			choices: empChoices,
 		},
 		{
 			type: "list",
 			name: "roleId",
-			message: "Which manager do you want to update?",
-			choices: managerChoices,
+			message: "Which manager is to be assigned to the employee?",
+			choices: mgrChoices,
 		},
 	],
 

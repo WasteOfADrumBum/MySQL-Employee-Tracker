@@ -394,12 +394,7 @@ function promptAddRole(departmentChoices) {
 
 /* === || UPDATE EMPLOYEE ROLE FUNCTION || === */
 function updateEmployeeRole() {
-	employeeArray();
-}
-
-/* === || EMPLOYEE EMPLOYEE ROLE || === */
-function employeeArray() {
-	console.log("Updating an employee");
+	console.log("Updating an employee's role");
 
 	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
   FROM employee e
@@ -419,7 +414,7 @@ function employeeArray() {
 		}));
 
 		console.table(res);
-		console.log("employeeArray To Update!\n");
+		console.log("roleArray To Update!");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		roleArray(employeeChoices);
@@ -444,7 +439,7 @@ function roleArray(employeeChoices) {
 		}));
 
 		console.table(res);
-		console.log("roleArray to Update!\n");
+		console.log("roleArray to Update!");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptEmployeeRole(employeeChoices, roleChoices);
@@ -473,69 +468,77 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
 		});
 }
 
-/* === || UPDATE MANAGER || === */
-// -------------------- ↓ ⚠ not working ⚠ ↓ --------------------
-/* function updateEmployeeManager() {
-	employeeManagerArray();
-} */
+/* === || UPDATE MANAGER FUNCTION || === */
+function updateEmployeeManager() {
+	console.log("Updating an employee's manager\n");
 
-/* === || EMPLOYEE ARRAY || === */
-// -------------------- ↓ ⚠ not working ⚠ ↓ --------------------
-/* function employeeManagerArray() {
-	console.log("Updating an employee's Manager");
-
-	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
-	FROM employee e
-	JOIN role r
+	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager
+  FROM employee e
+  LEFT JOIN role r
 	ON e.role_id = r.id
-	JOIN department d
-	ON d.id = r.department_id
-	JOIN employee m
+  LEFT JOIN department d
+  ON d.id = r.department_id
+  LEFT JOIN employee m
 	ON m.id = e.manager_id`;
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		const managerChoices = res.map(({ id, first_name, last_name }) => ({
-			value: id,
-			name: `${first_name} ${last_name}`,
-		}));
-
+		const empChoices = res.map(
+			({ id, first_name, last_name, title, department, manager }) => ({
+				value: id,
+				name: `${first_name} ${last_name}`,
+				title: `${title}`,
+				department: `${department}`,
+				manager: `${manager}`,
+			}),
+		);
 		console.table(res);
-		console.log("employeeArray To Update!\n");
+		console.log("managerEmpChangeArray to Update!");
+		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
-		managerArray(managerChoices);
+		managerArray(empChoices);
 	});
-} */
+}
 
-/* === || MANAGER ARRAY || === */
-/* function managerArray(employeeChoices) {
-	console.log("Updating a manager");
+/* === || UPDATE MANAGER || === */
+function managerArray(empChoices) {
+	console.log("Updating employee's manager");
 
-	var query = `SELECT r.id, r.title, r.salary 
-  FROM role r`;
-	let managerChoices;
+	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager
+  FROM employee e
+  LEFT JOIN role r
+	ON e.role_id = r.id
+  LEFT JOIN department d
+  ON d.id = r.department_id
+  LEFT JOIN employee m
+	ON m.id = e.manager_id`;
+
+	let mgrChoices;
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		managerChoices = res.map(({ id, title }) => ({
+		mgrChoices = res.map(({ id, manager, title, department }) => ({
 			value: id,
+			name: `${manager}`,
 			title: `${title}`,
+			department: `${department}`,
 		}));
 
 		console.table(res);
-		console.log("managerArray to manager!\n");
+		console.log("roleArray to Update!");
+		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
-		promptEmployeeManager(employeeChoices, managerChoices);
+		promptEmployeeManager(empChoices, mgrChoices);
 	});
-} */
+}
 
-/* === || PROMPT MANAGER || === */
-// -------------------- ↓ ⚠ not working ⚠ ↓ --------------------
-/* function promptEmployeeManager(employeeChoices, managerChoices) {
+/* === || PROMPT UPDATE MANAGER || === */
+// ---------- ↓ ⚠ Selection Not Updating ⚠ ↓ ----------
+function promptEmployeeManager(empChoices, mgrChoices) {
 	inquirer
-		.prompt(prompt.updateManager(employeeChoices, managerChoices))
+		.prompt(prompt.updateManager(empChoices, mgrChoices))
 		.then(function (answer) {
 			var query = `UPDATE employee SET manager_id = ? WHERE id = ?`;
 			// after prompting, insert a new item into the db
@@ -547,11 +550,12 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
 
 				console.table(res);
 				console.log(res.affectedRows + "Updated successfully!");
+				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				firstPrompt();
 			});
 		});
-} */
+}
 
 // === ╔══════════════════╗ ===
 // === ║ REMOVE FUNCTIONS ║ ===
