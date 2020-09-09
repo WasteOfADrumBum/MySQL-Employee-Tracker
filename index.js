@@ -403,12 +403,12 @@ function updateEmployeeRole() {
 	console.log("Updating an employee's role");
 
 	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
-  FROM employee e
-  JOIN role r
+	FROM employee e
+	LEFT JOIN role r
 	ON e.role_id = r.id
-  JOIN department d
-  ON d.id = r.department_id
-  JOIN employee m
+	LEFT JOIN department d
+	ON d.id = r.department_id
+	LEFT JOIN employee m
 	ON m.id = e.manager_id`;
 
 	connection.query(query, function (err, res) {
@@ -451,7 +451,7 @@ function roleArray(employeeChoices) {
 	});
 }
 
-/* === || PROMPT ROLE || === */
+/* === || PROMPT UPDATE ROLE || === */
 function promptEmployeeRole(employeeChoices, roleChoices) {
 	inquirer
 		.prompt(prompt.updateRole(employeeChoices, roleChoices))
@@ -465,121 +465,45 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
 				if (err) throw err;
 
 				console.table(res);
-				console.log(res.affectedRows + "Updated successfully!");
+				console.log(res.affectedRows + " Updated successfully!");
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				firstPrompt();
 			});
 		});
-}
-
-/* === || UPDATE MANAGER FUNCTION || === */
-function updateEmployeeManager() {
-	console.log("Updating an employee's manager\n");
-
-	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager
-  FROM employee e
-  LEFT JOIN role r
-	ON e.role_id = r.id
-  LEFT JOIN department d
-  ON d.id = r.department_id
-  LEFT JOIN employee m
-	ON m.id = e.manager_id`;
-
-	connection.query(query, function (err, res) {
-		if (err) throw err;
-
-		// Select Employee
-		const empChoices = res.map(
-			({ id, first_name, last_name, title, department, manager }) => ({
-				value: id,
-				name: `${first_name} ${last_name}`,
-				title: `${title}`,
-				department: `${department}`,
-				manager: `${manager}`,
-			}),
-		);
-		console.table(res);
-		console.log("managerEmpChangeArray to Update!");
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-		managerArray(empChoices);
-	});
 }
 
 /* === || UPDATE MANAGER || === */
-function managerArray(empChoices) {
-	console.log("Updating employee's manager");
 
-	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager
-  FROM employee e
-  LEFT JOIN role r
-	ON e.role_id = r.id
-  LEFT JOIN department d
-  ON d.id = r.department_id
-  LEFT JOIN employee m
-	ON m.id = e.manager_id`;
-
-	let mgrChoices;
-
-	connection.query(query, function (err, res) {
-		if (err) throw err;
-
-		// Select Manager
-		mgrChoices = res.map(
-			({ id, first_name, last_name, title, department }) => ({
-				value: id,
-				name: `${first_name} ${last_name}`,
-				title: `${title}`,
-				department: `${department}`,
-			}),
-		);
-
-		console.table(res);
-		console.log("roleArray to Update!");
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-		promptEmployeeManager(empChoices, mgrChoices);
-	});
-}
-
-/* === || PROMPT UPDATE MANAGER || === */
-// ---------- ↓ ⚠ Selection Not Updating ⚠ ↓ ----------
-function promptEmployeeManager(empChoices, mgrChoices) {
-	inquirer
-		.prompt(prompt.updateManager(empChoices, mgrChoices))
-		.then(function (answer) {
-			// log to verify correct value replacments
-			console.log(
-				"\n",
-				"Employee's E-ID:",
-				answer.employeeID,
-				"\n",
-				"Manager's E-ID",
-				answer.managerId,
-				"\n",
-			);
-
-			// Set Employee's manager_id to seleced manager's employee (value) ID
-			var query = `UPDATE employee SET manager_id = ? WHERE id = ?`;
-
-			// after prompting, insert a new item into the db
-			connection.query(query, [answer.managerId, answer.employeeId], function (
-				err,
-				res,
-			) {
-				if (err) throw err;
-
-				console.table(res);
-				// ---------- ↓ ⚠ No rows matched or changed ⚠ ↓ ----------
-				// Employee's manager_id should be replaced with selected manager's employee id
-				// Correct ID's are being selected, but manager id its not being replaced
-				console.log(res.affectedRows + " Updated successfully!");
-				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-				firstPrompt();
+const updateEmployeeManager = () => {
+	let employees = [];
+	connection.query(
+		`SELECT id, first_name, last_name
+  FROM employee`,
+		(err, res) => {
+			res.forEach((element) => {
+				employees.push(
+					`${element.id} ${element.first_name} ${element.last_name}`,
+				);
 			});
-		});
-}
+
+			inquirer.prompt(prompt.updateManager(employees)).then((response) => {
+				let idCode = parseInt(response.update);
+				let managerCode = parseInt(response.manager);
+				connection.query(
+					`UPDATE employee SET manager_id = ${managerCode} WHERE id = ${idCode}`,
+					(err, res) => {
+						if (err) throw err;
+
+						console.log("\n" + res.affectedRows + " Updated successfully!");
+						console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
+						firstPrompt();
+					},
+				);
+			});
+		},
+	);
+};
 
 // === ╔══════════════════╗ ===
 // === ║ REMOVE FUNCTIONS ║ ===
