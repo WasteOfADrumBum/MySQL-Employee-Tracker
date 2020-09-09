@@ -235,9 +235,7 @@ function viewDepartments() {
 	connection.query(query, function (err, res) {
 		console.log(`DEPARTMENTS:`);
 		res.forEach((department) => {
-			console.log(
-				`Department Name: ${department.name} | Department Budget: ${department.id}`,
-			);
+			console.log(`ID: ${department.id} | ${department.name} Department`);
 		});
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 		firstPrompt();
@@ -248,10 +246,10 @@ function viewDepartments() {
 function viewRoles() {
 	var query = "SELECT * FROM role";
 	connection.query(query, function (err, res) {
-		console.log(`ROLES:`);
+		console.log(`ROLES:\n`);
 		res.forEach((role) => {
 			console.log(
-				`ID: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department ID: ${role.department_id}`,
+				`ID: ${role.id} | Title: ${role.title}\n Salary: ${role.salary}\n`,
 			);
 		});
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");

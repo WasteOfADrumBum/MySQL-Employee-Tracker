@@ -11,7 +11,6 @@ module.exports = {
 			"View Employees by Department", // viewEmployeeByDepartment();
 			"View Departments", // viewDepartments();
 			"View Roles", // viewRoles();
-			// ---------- ↓ ⚠ Needs Budget Calculation ⚠ ↓ ----------
 			"View Department Budget", // viewDepartmentBudget();
 
 			/* === || ADD || === */
