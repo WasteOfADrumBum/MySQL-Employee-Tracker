@@ -19,6 +19,7 @@ module.exports = {
 			"Add Role", // addRole();
 
 			/* === || UPDATE || === */
+			// --- ↓ ⚠ Not Displaying all employees ⚠ ↓ ---
 			"Update Employee Role", // updateEmployeeRole();
 			// --- ↓ ⚠ Selection Not Updating ⚠ ↓ ---
 			"Update Employee Manager", // updateEmployeeManager();
@@ -99,7 +100,7 @@ module.exports = {
 		},
 		{
 			type: "list",
-			name: "roleId",
+			name: "managerId",
 			message: "Which manager is to be assigned to the employee?",
 			choices: mgrChoices,
 		},

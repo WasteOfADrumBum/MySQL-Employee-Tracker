@@ -414,13 +414,13 @@ function updateEmployeeRole() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
+		// Select Employee to Update Role
 		const employeeChoices = res.map(({ id, first_name, last_name }) => ({
 			value: id,
 			name: `${first_name} ${last_name}`,
 		}));
 
 		console.table(res);
-		console.log("roleArray To Update!");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		roleArray(employeeChoices);
@@ -445,7 +445,6 @@ function roleArray(employeeChoices) {
 		}));
 
 		console.table(res);
-		console.log("roleArray to Update!");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptEmployeeRole(employeeChoices, roleChoices);
@@ -490,6 +489,7 @@ function updateEmployeeManager() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
+		// Select Employee
 		const empChoices = res.map(
 			({ id, first_name, last_name, title, department, manager }) => ({
 				value: id,
@@ -525,6 +525,7 @@ function managerArray(empChoices) {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
+		// Select Manager
 		mgrChoices = res.map(
 			({ id, first_name, last_name, title, department }) => ({
 				value: id,
@@ -548,7 +549,20 @@ function promptEmployeeManager(empChoices, mgrChoices) {
 	inquirer
 		.prompt(prompt.updateManager(empChoices, mgrChoices))
 		.then(function (answer) {
+			// log to verify correct value replacments
+			console.log(
+				"\n",
+				"Employee's E-ID:",
+				answer.employeeID,
+				"\n",
+				"Manager's E-ID",
+				answer.managerId,
+				"\n",
+			);
+
+			// Set Employee's manager_id to seleced manager's employee (value) ID
 			var query = `UPDATE employee SET manager_id = ? WHERE id = ?`;
+
 			// after prompting, insert a new item into the db
 			connection.query(query, [answer.managerId, answer.employeeId], function (
 				err,
@@ -557,9 +571,11 @@ function promptEmployeeManager(empChoices, mgrChoices) {
 				if (err) throw err;
 
 				console.table(res);
-				console.log(res.affectedRows + "Updated successfully!");
+				// ---------- ↓ ⚠ No rows matched or changed ⚠ ↓ ----------
+				// Employee's manager_id should be replaced with selected manager's employee id
+				// Correct ID's are being selected, but manager id its not being replaced
+				console.log(res.affectedRows + " Updated successfully!");
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
 				firstPrompt();
 			});
 		});
