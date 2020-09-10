@@ -92,7 +92,7 @@ App for business to be able to view and manage the departments, roles, and emplo
 
 ## GitHub
 
-![Image of me](https://avatars0.githubusercontent.com/u/66432859?v=4)
+<img src="https://avatars0.githubusercontent.com/u/66432859?v=4" width="250" />
 
 - Joshua M. Small
 - [GitHub Profile](https://github.com/WasteOfADrumBum)
