@@ -1,13 +1,13 @@
 # Employee_Tracker
 
-![GitHub repo size](https://img.shields.io/github/repo-size/WasteOfADrumBum/MySQL-Employee-Tracker?logo=github)
-![GitHub top language](https://img.shields.io/github/languages/top/WasteOfADrumBum/MySQL-Employee-Tracker?color=green&logo=github&logoColor=green)
-![GitHub language count](https://img.shields.io/github/languages/count/WasteOfADrumBum/MySQL-Employee-Tracker?color=green&logo=github&logoColor=green)
 ![GitHub license](https://img.shields.io/badge/Made%20by-%40WasteOfADrumBum-green)
 
 App for business to be able to view and manage the departments, roles, and employees in their company so that they can organize and plan their business better.
 
 # Technologies Used
+
+![GitHub top language](https://img.shields.io/github/languages/top/WasteOfADrumBum/MySQL-Employee-Tracker?color=green&logo=github&logoColor=green)
+![GitHub language count](https://img.shields.io/github/languages/count/WasteOfADrumBum/MySQL-Employee-Tracker?color=green&logo=github&logoColor=green)
 
 1. Node.js
 2. MySQL
@@ -58,10 +58,12 @@ App for business to be able to view and manage the departments, roles, and emplo
 
 ## Example Gif
 
-![Database Schema](Assets/schema.png)
-![Employee Tracker](Assets/employee-tracker.gif)
+<img src="Assets/schema.png" width="500" />
+<img src="Assets/employee-tracker.gif" width="500" />
 
 ## Repository
+
+![GitHub repo size](https://img.shields.io/github/repo-size/WasteOfADrumBum/MySQL-Employee-Tracker?logo=github)
 
 ![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/WasteOfADrumBum/MySQL-Employee-Tracker)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/WasteOfADrumBum/MySQL-Employee-Tracker)
