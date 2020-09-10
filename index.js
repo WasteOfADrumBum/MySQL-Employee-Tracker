@@ -141,8 +141,6 @@ function viewEmployeeByManager() {
 				name: manager,
 			}));
 
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
 		promptManager(managerChoices);
 	});
 }
@@ -194,8 +192,6 @@ function viewEmployeeByDepartment() {
 			name: data.name,
 		}));
 
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
 		promptDepartment(departmentChoices);
 	});
 }
@@ -217,6 +213,7 @@ function promptDepartment(departmentChoices) {
 				if (err) throw err;
 
 				console.table("\nDepartment Rota: ", res);
+				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				firstPrompt();
 			});
@@ -367,8 +364,6 @@ function addRole() {
 			name: `${id} ${name}`,
 		}));
 
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
 		promptAddRole(departmentChoices);
 	});
 }
@@ -498,8 +493,6 @@ function deleteEmployee() {
 			name: `${id} ${first_name} ${last_name}`,
 		}));
 
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
 		promptDeleteEmployee(deleteEmployeeChoices);
 	});
 }
@@ -536,8 +529,6 @@ function deleteDepartment() {
 			name: `${id} ${name}`,
 		}));
 
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
 		promptDeleteDepartment(deleteDepartmentChoices);
 	});
 }
@@ -573,8 +564,6 @@ function deleteRole() {
 			value: id,
 			name: `${id} ${title}`,
 		}));
-
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptDeleteRole(deleteRoleChoices);
 	});
