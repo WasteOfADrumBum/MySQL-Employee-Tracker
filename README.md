@@ -3,6 +3,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/WasteOfADrumBum/MySQL-Employee-Tracker?logo=github)
 ![GitHub top language](https://img.shields.io/github/languages/top/WasteOfADrumBum/MySQL-Employee-Tracker?color=green&logo=github&logoColor=green)
 ![GitHub language count](https://img.shields.io/github/languages/count/WasteOfADrumBum/MySQL-Employee-Tracker?color=green&logo=github&logoColor=green)
+![GitHub license](https://img.shields.io/badge/Made%20by-%40WasteOfADrumBum-green)
 
 App for business to be able to view and manage the departments, roles, and employees in their company so that they can organize and plan their business better.
 
@@ -26,7 +27,7 @@ App for business to be able to view and manage the departments, roles, and emplo
 
 ## Installation
 
-> 1.npm init // 2.npm install mysql inquirer // 3.npm install console.table --save
+> 1. npm install // 2. npm install mysql inquirer // 3.npm install console.table --save
 
 - Use the [MySQL](https://www.npmjs.com/package/mysql) NPM package to connect to your MySQL database and perform queries.
 
@@ -36,7 +37,7 @@ App for business to be able to view and manage the departments, roles, and emplo
 
 ## Instructions
 
-> Open your terminal and go inside the repo where the tracker.js is located. In your terminal type node tracker.js (nodemon tracker.js won't work properly with inquirer list choices). Follow the prompts to interact with the information of your company as desired.
+> Use console command [node index.js] to run application in terminal.
 
 ## Features
 
@@ -62,11 +63,26 @@ App for business to be able to view and manage the departments, roles, and emplo
 
 ## Repository
 
+![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/WasteOfADrumBum/MySQL-Employee-Tracker)
+![GitHub Last Commit](https://img.shields.io/github/last-commit/WasteOfADrumBum/MySQL-Employee-Tracker)
+
+![GitHub contributors](https://img.shields.io/github/contributors/WasteOfADrumBum/MySQL-Employee-Tracker)
+![GitHub Forks](https://img.shields.io/github/forks/WasteOfADrumBum/MySQL-Employee-Tracker?label=Fork)
+![GitHub Watchers](https://img.shields.io/github/watchers/WasteOfADrumBum/MySQL-Employee-Tracker?label=Watch)
+
+![GitHubopen pull request](https://img.shields.io/github/issues-pr/WasteOfADrumBum/MySQL-Employee-Tracker)
+![GitHub closed pull request](https://img.shields.io/github/issues-pr-closed/WasteOfADrumBum/MySQL-Employee-Tracker)
+
+![GitHub Stars](https://img.shields.io/github/stars/WasteOfADrumBum/MySQL-Employee-Tracker?style=social)
+
 - [Project Repo](https://github.com/WasteOfADrumBum/MySQL-Employee-Tracker)
 
 ## Test
 
-![GitHub license](https://img.shields.io/badge/test-100%25-success)
+![GitHub test](https://img.shields.io/badge/test-100%25-success)
+
+![GitHub open issues](https://img.shields.io/github/issues/WasteOfADrumBum/MySQL-Employee-Tracker)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/WasteOfADrumBum/MySQL-Employee-Tracker)
 
 ## Licence
 
@@ -76,5 +92,6 @@ App for business to be able to view and manage the departments, roles, and emplo
 
 ![Image of me](https://avatars0.githubusercontent.com/u/66432859?v=4)
 
-- Joshua Small
+- Joshua M. Small
 - [GitHub Profile](https://github.com/WasteOfADrumBum)
+- ![GitHub Followers](https://img.shields.io/github/followers/WasteOfADrumBum?label=Follow)
