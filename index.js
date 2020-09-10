@@ -3,6 +3,7 @@
 // === ╚══════════╝ ===
 
 const inquirer = require("inquirer");
+const table = require("console.table");
 // MySQL Connection
 const connection = require("./config/connection");
 // Prompts
@@ -195,7 +196,7 @@ function viewEmployeeByDepartment() {
 	});
 }
 
-/* === || PROMPT DEPARTMENT || === */
+/* === || PROMPT EMPLOYEE BY DEPARTMENT || === */
 function promptDepartment(departmentChoices) {
 	inquirer
 		.prompt(prompt.departmentPrompt(departmentChoices))
@@ -274,48 +275,57 @@ function viewDepartmentBudget() {
 // === ╚═══════════════╝ ===
 
 /* === || ADD EMPLOYEE || === */
-function addEmployee() {
-	console.log("Create an employee\n");
-
-	var query = `SELECT r.id AS value, r.title, r.salary 
-      FROM role r`;
-
-	connection.query(query, function (err, res) {
-		if (err) throw err;
-
-		console.table(res);
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-		promptInsert(res);
+const addEmployee = () => {
+	let departmentArray = [];
+	connection.query(`SELECT * FROM department`, (err, res) => {
+		res.forEach((element) => {
+			departmentArray.push(`${element.id} ${element.name}`);
+		});
+		let roleArray = [];
+		connection.query(`SELECT id, title FROM role`, (err, res) => {
+			res.forEach((element) => {
+				roleArray.push(`${element.id} ${element.title}`);
+			});
+			let managerArray = [];
+			connection.query(
+				`SELECT id, first_name, last_name FROM employee`,
+				(err, res) => {
+					res.forEach((element) => {
+						managerArray.push(
+							`${element.id} ${element.first_name} ${element.last_name}`,
+						);
+					});
+					inquirer
+						.prompt(
+							prompt.insertEmployee(departmentArray, roleArray, managerArray),
+						)
+						.then((response) => {
+							//Get id numbers from answers to use them as reference
+							let roleCode = parseInt(response.role);
+							let managerCode = parseInt(response.manager);
+							connection.query(
+								"INSERT INTO employee SET ?",
+								{
+									first_name: response.firstName,
+									last_name: response.lastName,
+									role_id: roleCode,
+									manager_id: managerCode,
+								},
+								(err, res) => {
+									if (err) throw err;
+									console.log("\n" + res.affectedRows + " employee created");
+									console.log(
+										"\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n",
+									);
+									viewEmployee();
+								},
+							);
+						});
+				},
+			);
+		});
 	});
-}
-
-/* === || PROMPT ADD EMPLOYEE || === */
-function promptInsert(roleChoices) {
-	inquirer.prompt(prompt.insertEmployee(roleChoices)).then(function (answer) {
-		var query = `INSERT INTO employee SET ?`;
-		// insert a new item into the db
-		connection.query(
-			query,
-			{
-				first_name: answer.first_name,
-				last_name: answer.last_name,
-				role_id: answer.roleId,
-				manager_id: answer.managerId,
-			},
-			function (err, res) {
-				if (err) throw err;
-
-				console.log(
-					"\n" + res.affectedRows + " employee created successfully!",
-				);
-				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-				firstPrompt();
-			},
-		);
-	});
-}
+};
 
 /* === || ADD DEPARTMENT || === */
 function addDepartment() {
