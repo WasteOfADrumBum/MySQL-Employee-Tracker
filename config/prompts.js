@@ -73,18 +73,18 @@ module.exports = {
 	],
 
 	/* === || PROMPT ROLE || === */
-	updateRole: (employeeChoices, roleChoices) => [
+	updateRole: (employees, job) => [
 		{
+			name: "update",
 			type: "list",
-			name: "employeeId",
-			message: "Which employee do you want to set with the role?",
-			choices: employeeChoices,
+			message: "Choose the employee whose role is to be updated:",
+			choices: employees,
 		},
 		{
+			name: "role",
 			type: "list",
-			name: "roleId",
-			message: "Which role do you want to update?",
-			choices: roleChoices,
+			message: "Choose employee's job position",
+			choices: job,
 		},
 	],
 

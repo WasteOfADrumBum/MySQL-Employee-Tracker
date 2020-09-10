@@ -398,84 +398,9 @@ function promptAddRole(departmentChoices) {
 // === ║ UPDATE FUNCTIONS ║ ===
 // === ╚══════════════════╝ ===
 
-/* === || UPDATE EMPLOYEE ROLE FUNCTION || === */
-function updateEmployeeRole() {
-	console.log("Updating an employee's role");
-
-	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
-	FROM employee e
-	LEFT JOIN role r
-	ON e.role_id = r.id
-	LEFT JOIN department d
-	ON d.id = r.department_id
-	LEFT JOIN employee m
-	ON m.id = e.manager_id`;
-
-	connection.query(query, function (err, res) {
-		if (err) throw err;
-
-		// Select Employee to Update Role
-		const employeeChoices = res.map(({ id, first_name, last_name }) => ({
-			value: id,
-			name: `${first_name} ${last_name}`,
-		}));
-
-		console.table(res);
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-		roleArray(employeeChoices);
-	});
-}
-
-/* === || UPDATE ROLE || === */
-function roleArray(employeeChoices) {
-	console.log("Updating an role");
-
-	var query = `SELECT r.id, r.title, r.salary 
-  FROM role r`;
-	let roleChoices;
-
-	connection.query(query, function (err, res) {
-		if (err) throw err;
-
-		roleChoices = res.map(({ id, title, salary }) => ({
-			value: id,
-			title: `${title}`,
-			salary: `${salary}`,
-		}));
-
-		console.table(res);
-		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-		promptEmployeeRole(employeeChoices, roleChoices);
-	});
-}
-
-/* === || PROMPT UPDATE ROLE || === */
-function promptEmployeeRole(employeeChoices, roleChoices) {
-	inquirer
-		.prompt(prompt.updateRole(employeeChoices, roleChoices))
-		.then(function (answer) {
-			var query = `UPDATE employee SET role_id = ? WHERE id = ?`;
-			// after prompting, insert a new item into the db
-			connection.query(query, [answer.roleId, answer.employeeId], function (
-				err,
-				res,
-			) {
-				if (err) throw err;
-
-				console.table(res);
-				console.log(res.affectedRows + " Updated successfully!");
-				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
-
-				firstPrompt();
-			});
-		});
-}
-
-/* === || UPDATE MANAGER || === */
-
-const updateEmployeeManager = () => {
+/* === || UPDATE EMPLOYEE ROLE || === */
+const updateEmployeeRole = () => {
+	// create blank array employeesArray
 	let employees = [];
 	connection.query(
 		`SELECT id, first_name, last_name
@@ -486,11 +411,51 @@ const updateEmployeeManager = () => {
 					`${element.id} ${element.first_name} ${element.last_name}`,
 				);
 			});
+			let job = [];
+			connection.query(`SELECT id, title FROM role`, (err, res) => {
+				res.forEach((element) => {
+					job.push(`${element.id} ${element.title}`);
+				});
+				inquirer.prompt(prompt.updateRole(employees, job)).then((response) => {
+					let idCode = parseInt(response.update);
+					let roleCode = parseInt(response.role);
+					connection.query(
+						`UPDATE employee SET role_id = ${roleCode} WHERE id = ${idCode}`,
+						(err, res) => {
+							if (err) throw err;
 
-			inquirer.prompt(prompt.updateManager(employees)).then((response) => {
-				let idCode = parseInt(response.update);
-				let managerCode = parseInt(response.manager);
+							console.log("\n" + res.affectedRows + " Updated successfully!");
+							console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
+							firstPrompt();
+						},
+					);
+				});
+			});
+		},
+	);
+};
+
+/* === || UPDATE MANAGER || === */
+const updateEmployeeManager = () => {
+	// create blank array employees
+	let employees = [];
+	connection.query(
+		`SELECT id, first_name, last_name
+  FROM employee`,
+		(err, res) => {
+			res.forEach((element) => {
+				// for each ID and Name push into array
+				employees.push(
+					`${element.id} ${element.first_name} ${element.last_name}`,
+				);
+			});
+			// choose employee and manager
+			inquirer.prompt(prompt.updateManager(employees)).then((answer) => {
+				// parseInt prompt answers
+				let idCode = parseInt(answer.update);
+				let managerCode = parseInt(answer.manager);
 				connection.query(
+					// replace employee's mgr_ID with emp_ID of new manager
 					`UPDATE employee SET manager_id = ${managerCode} WHERE id = ${idCode}`,
 					(err, res) => {
 						if (err) throw err;
