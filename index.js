@@ -95,7 +95,7 @@ function firstPrompt() {
 
 /* === || VIEW EMPLOYEES || === */
 function viewEmployee() {
-	console.log("Viewing employees\n");
+	console.log("Employee Rota:\n");
 
 	var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
   FROM employee e
@@ -110,7 +110,6 @@ function viewEmployee() {
 		if (err) throw err;
 
 		console.table(res);
-		console.log("Employees viewed!\n");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		firstPrompt();
@@ -119,7 +118,7 @@ function viewEmployee() {
 
 /* === || VIEW EMPLOYEE BY MANAGER || === */
 function viewEmployeeByManager() {
-	console.log("Viewing managers\n");
+	console.log("Manager Rota:\n");
 
 	var query = `SELECT e.manager_id, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee e LEFT JOIN role r
 	ON e.role_id = r.id
@@ -138,8 +137,6 @@ function viewEmployeeByManager() {
 				name: manager,
 			}));
 
-		console.table(res);
-		console.log("Management view succeed!\n");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptManager(managerChoices);
@@ -151,8 +148,6 @@ function promptManager(managerChoices) {
 	inquirer
 		.prompt(prompt.viewManagerPrompt(managerChoices))
 		.then(function (answer) {
-			console.log("answer ", answer.manager_Id);
-
 			var query = `SELECT e.id, e.first_name, e.last_name, r.title, CONCAT(m.first_name, ' ', m.last_name) AS manager
 			FROM employee e
 			JOIN role r
@@ -166,8 +161,7 @@ function promptManager(managerChoices) {
 			connection.query(query, answer.managerId, function (err, res) {
 				if (err) throw err;
 
-				console.table("response ", res);
-				console.log(res.affectedRows + "Employees are viewed!");
+				console.table("\nManager's subordinates:", res);
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				firstPrompt();
@@ -176,8 +170,8 @@ function promptManager(managerChoices) {
 }
 
 /* === || VIEW EMPLOYEE BY DEPARTMENT || === */
-function viewEmployeeByDepartment(departmentChoices) {
-	console.log("Viewing employees by department\n");
+function viewEmployeeByDepartment() {
+	console.log("View employees by department\n");
 
 	var query = `SELECT d.id, d.name
 	FROM employee e
@@ -195,8 +189,6 @@ function viewEmployeeByDepartment(departmentChoices) {
 			name: data.name,
 		}));
 
-		console.table(res);
-		console.log("Department view succeed!");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptDepartment(departmentChoices);
@@ -208,8 +200,6 @@ function promptDepartment(departmentChoices) {
 	inquirer
 		.prompt(prompt.departmentPrompt(departmentChoices))
 		.then(function (answer) {
-			console.log("answer ", answer.departmentId);
-
 			var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
 			FROM employee e
 			JOIN role r
@@ -221,8 +211,7 @@ function promptDepartment(departmentChoices) {
 			connection.query(query, answer.departmentId, function (err, res) {
 				if (err) throw err;
 
-				console.table("response ", res);
-				console.log(res.affectedRows + "Employees are viewed!\n");
+				console.table("\nDepartment Rota: ", res);
 
 				firstPrompt();
 			});
@@ -233,7 +222,7 @@ function promptDepartment(departmentChoices) {
 function viewDepartments() {
 	var query = "SELECT * FROM department";
 	connection.query(query, function (err, res) {
-		console.log(`DEPARTMENTS:`);
+		console.log(`\nDEPARTMENTS:\n`);
 		res.forEach((department) => {
 			console.log(`ID: ${department.id} | ${department.name} Department`);
 		});
@@ -246,7 +235,7 @@ function viewDepartments() {
 function viewRoles() {
 	var query = "SELECT * FROM role";
 	connection.query(query, function (err, res) {
-		console.log(`ROLES:\n`);
+		console.log(`\nROLES:\n`);
 		res.forEach((role) => {
 			console.log(
 				`ID: ${role.id} | Title: ${role.title}\n Salary: ${role.salary}\n`,
@@ -259,7 +248,6 @@ function viewRoles() {
 
 /* === || VIEW DEPARTMENT BUDGET || === */
 function viewDepartmentBudget() {
-	// --- ↓ ⚠ Budget = total salary of each employee in department ⚠ ↓ ---
 	var query = `SELECT d.name, 
 		r.salary, sum(r.salary) AS budget
 		FROM employee e 
@@ -270,7 +258,7 @@ function viewDepartmentBudget() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		console.log(`DEPARTMENT BUDGETS:\n`);
+		console.log(`\nDEPARTMENT BUDGETS:\n`);
 		res.forEach((department) => {
 			console.log(
 				`Department: ${department.name}\n Budget: ${department.budget}\n`,
@@ -287,7 +275,7 @@ function viewDepartmentBudget() {
 
 /* === || ADD EMPLOYEE || === */
 function addEmployee() {
-	console.log("Inserting an employee!");
+	console.log("Create an employee\n");
 
 	var query = `SELECT r.id AS value, r.title, r.salary 
       FROM role r`;
@@ -296,7 +284,6 @@ function addEmployee() {
 		if (err) throw err;
 
 		console.table(res);
-		console.log("RoleToInsert!");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptInsert(res);
@@ -306,8 +293,6 @@ function addEmployee() {
 /* === || PROMPT ADD EMPLOYEE || === */
 function promptInsert(roleChoices) {
 	inquirer.prompt(prompt.insertEmployee(roleChoices)).then(function (answer) {
-		console.log(answer);
-
 		var query = `INSERT INTO employee SET ?`;
 		// insert a new item into the db
 		connection.query(
@@ -321,8 +306,9 @@ function promptInsert(roleChoices) {
 			function (err, res) {
 				if (err) throw err;
 
-				console.table(res);
-				console.log(res.insertedRows + "Inserted successfully!\n");
+				console.log(
+					"\n" + res.affectedRows + " employee created successfully!",
+				);
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				firstPrompt();
@@ -362,8 +348,7 @@ function addRole() {
 			name: `${id} ${name}`,
 		}));
 
-		console.table(res);
-		console.log("Department array!");
+		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptAddRole(departmentChoices);
 	});
@@ -384,8 +369,7 @@ function promptAddRole(departmentChoices) {
 			function (err, res) {
 				if (err) throw err;
 
-				console.table(res);
-				console.log("Role Inserted!");
+				console.log("\n" + res.affectedRows + " role created");
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				viewRoles();
@@ -424,7 +408,9 @@ const updateEmployeeRole = () => {
 						(err, res) => {
 							if (err) throw err;
 
-							console.log("\n" + res.affectedRows + " Updated successfully!");
+							console.log(
+								"\n" + "\n" + res.affectedRows + " Updated successfully!",
+							);
 							console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 							firstPrompt();
 						},
@@ -460,7 +446,9 @@ const updateEmployeeManager = () => {
 					(err, res) => {
 						if (err) throw err;
 
-						console.log("\n" + res.affectedRows + " Updated successfully!");
+						console.log(
+							"\n" + "\n" + res.affectedRows + " Updated successfully!",
+						);
 						console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 						firstPrompt();
 					},
@@ -489,8 +477,6 @@ function deleteEmployee() {
 			name: `${id} ${first_name} ${last_name}`,
 		}));
 
-		console.table(res);
-		console.log("ArrayToDelete!\n");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptDeleteEmployee(deleteEmployeeChoices);
@@ -507,8 +493,7 @@ function promptDeleteEmployee(deleteEmployeeChoices) {
 			connection.query(query, { id: answer.employeeId }, function (err, res) {
 				if (err) throw err;
 
-				console.table(res);
-				console.log(res.affectedRows + "Deleted!\n");
+				console.log("\n" + res.affectedRows + "  employee deleted");
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				firstPrompt();
@@ -518,7 +503,7 @@ function promptDeleteEmployee(deleteEmployeeChoices) {
 
 /* === || REMOVE DEPARTMENT || === */
 function deleteDepartment() {
-	console.log("Deleting a department");
+	console.log("\nRemove a Department:\n");
 
 	var query = `SELECT e.id, e.name FROM department e`;
 
@@ -530,8 +515,6 @@ function deleteDepartment() {
 			name: `${id} ${name}`,
 		}));
 
-		console.table(res);
-		console.log("ArrayToDelete!\n");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptDeleteDepartment(deleteDepartmentChoices);
@@ -548,8 +531,7 @@ function promptDeleteDepartment(deleteDepartmentChoices) {
 			connection.query(query, { id: answer.departmentId }, function (err, res) {
 				if (err) throw err;
 
-				console.table(res);
-				console.log(res.affectedRows + "Deleted!\n");
+				console.log("\n" + res.affectedRows + " department deleted");
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				viewDepartments();
@@ -566,15 +548,11 @@ function deleteRole() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
-		const deleteRoleChoices = res.map(
-			({ id, title, salary, department_id }) => ({
-				value: id,
-				name: `${id} ${title} ${salary} ${department_id}`,
-			}),
-		);
+		const deleteRoleChoices = res.map(({ id, title }) => ({
+			value: id,
+			name: `${id} ${title}`,
+		}));
 
-		console.table(res);
-		console.log("ArrayToDelete!\n");
 		console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 		promptDeleteRole(deleteRoleChoices);
@@ -591,8 +569,7 @@ function promptDeleteRole(deleteRoleChoices) {
 			connection.query(query, { id: answer.roleId }, function (err, res) {
 				if (err) throw err;
 
-				console.table(res);
-				console.log(res.affectedRows + "Deleted!\n");
+				console.log("\n" + res.affectedRows + " role deleted");
 				console.log("\n<<<<<<<<<<<<<<<<<<<< ⛔ >>>>>>>>>>>>>>>>>>>>\n");
 
 				viewRoles();
