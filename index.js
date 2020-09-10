@@ -39,6 +39,7 @@ firstPrompt();
 
 /* === || INITIAL PROMPT || === */
 function firstPrompt() {
+	// Main Menu
 	inquirer.prompt(prompt.firstPrompt).then(function ({ task }) {
 		switch (task) {
 			case "View Employees":
@@ -131,7 +132,9 @@ function viewEmployeeByManager() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
+		// Select manager to view subordinates
 		const managerChoices = res
+			// Filter NULL (prevents selecting employees with no assigned manager)
 			.filter((mgr) => mgr.manager_id)
 			.map(({ manager_id, manager }) => ({
 				value: manager_id,
@@ -185,6 +188,7 @@ function viewEmployeeByDepartment() {
 	connection.query(query, function (err, res) {
 		if (err) throw err;
 
+		// Select department
 		const departmentChoices = res.map((data) => ({
 			value: data.id,
 			name: data.name,
@@ -276,16 +280,19 @@ function viewDepartmentBudget() {
 
 /* === || ADD EMPLOYEE || === */
 const addEmployee = () => {
+	// Select Employee's Department
 	let departmentArray = [];
 	connection.query(`SELECT * FROM department`, (err, res) => {
 		res.forEach((element) => {
 			departmentArray.push(`${element.id} ${element.name}`);
 		});
+		// Select Employee's Role
 		let roleArray = [];
 		connection.query(`SELECT id, title FROM role`, (err, res) => {
 			res.forEach((element) => {
 				roleArray.push(`${element.id} ${element.title}`);
 			});
+			// Select Employee's Manager
 			let managerArray = [];
 			connection.query(
 				`SELECT id, first_name, last_name FROM employee`,
@@ -295,12 +302,13 @@ const addEmployee = () => {
 							`${element.id} ${element.first_name} ${element.last_name}`,
 						);
 					});
+					// Create New Employee
 					inquirer
 						.prompt(
 							prompt.insertEmployee(departmentArray, roleArray, managerArray),
 						)
 						.then((response) => {
-							//Get id numbers from answers to use them as reference
+							// Insert chosen elements into employee array
 							let roleCode = parseInt(response.role);
 							let managerCode = parseInt(response.manager);
 							connection.query(
@@ -353,6 +361,7 @@ function addRole() {
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
+		// Select department for role
 		const departmentChoices = res.map(({ id, name }) => ({
 			value: id,
 			name: `${id} ${name}`,
@@ -368,7 +377,7 @@ function addRole() {
 function promptAddRole(departmentChoices) {
 	inquirer.prompt(prompt.insertRole(departmentChoices)).then(function (answer) {
 		var query = `INSERT INTO role SET ?`;
-
+		// Insert Title, Salary and Department into Role Array
 		connection.query(
 			query,
 			{
@@ -394,7 +403,7 @@ function promptAddRole(departmentChoices) {
 
 /* === || UPDATE EMPLOYEE ROLE || === */
 const updateEmployeeRole = () => {
-	// create blank array employeesArray
+	// Select Employee to update
 	let employees = [];
 	connection.query(
 		`SELECT id, first_name, last_name
@@ -405,12 +414,14 @@ const updateEmployeeRole = () => {
 					`${element.id} ${element.first_name} ${element.last_name}`,
 				);
 			});
+			// Select employee's new role
 			let job = [];
 			connection.query(`SELECT id, title FROM role`, (err, res) => {
 				res.forEach((element) => {
 					job.push(`${element.id} ${element.title}`);
 				});
 				inquirer.prompt(prompt.updateRole(employees, job)).then((response) => {
+					// Update Employee with Chosen Role
 					let idCode = parseInt(response.update);
 					let roleCode = parseInt(response.role);
 					connection.query(
@@ -433,7 +444,7 @@ const updateEmployeeRole = () => {
 
 /* === || UPDATE MANAGER || === */
 const updateEmployeeManager = () => {
-	// create blank array employees
+	// Select Employee to update
 	let employees = [];
 	connection.query(
 		`SELECT id, first_name, last_name
@@ -445,7 +456,7 @@ const updateEmployeeManager = () => {
 					`${element.id} ${element.first_name} ${element.last_name}`,
 				);
 			});
-			// choose employee and manager
+			// Select employee's new manager
 			inquirer.prompt(prompt.updateManager(employees)).then((answer) => {
 				// parseInt prompt answers
 				let idCode = parseInt(answer.update);
@@ -481,7 +492,7 @@ function deleteEmployee() {
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
-
+		// Select Employee to remove
 		const deleteEmployeeChoices = res.map(({ id, first_name, last_name }) => ({
 			value: id,
 			name: `${id} ${first_name} ${last_name}`,
@@ -499,7 +510,7 @@ function promptDeleteEmployee(deleteEmployeeChoices) {
 		.prompt(prompt.deleteEmployeePrompt(deleteEmployeeChoices))
 		.then(function (answer) {
 			var query = `DELETE FROM employee WHERE ?`;
-			// after prompting, insert a new item into the db
+			// after prompting, remove item from the db
 			connection.query(query, { id: answer.employeeId }, function (err, res) {
 				if (err) throw err;
 
@@ -519,7 +530,7 @@ function deleteDepartment() {
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
-
+		// Select Department to Remove
 		const deleteDepartmentChoices = res.map(({ id, name }) => ({
 			value: id,
 			name: `${id} ${name}`,
@@ -537,7 +548,7 @@ function promptDeleteDepartment(deleteDepartmentChoices) {
 		.prompt(prompt.deleteDepartmentPrompt(deleteDepartmentChoices))
 		.then(function (answer) {
 			var query = `DELETE FROM department WHERE ?`;
-			// after prompting, insert a new item into the db
+			// after prompting, remove item from the db
 			connection.query(query, { id: answer.departmentId }, function (err, res) {
 				if (err) throw err;
 
@@ -557,7 +568,7 @@ function deleteRole() {
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
-
+		// Select Role to Remove
 		const deleteRoleChoices = res.map(({ id, title }) => ({
 			value: id,
 			name: `${id} ${title}`,
@@ -575,7 +586,7 @@ function promptDeleteRole(deleteRoleChoices) {
 		.prompt(prompt.deleteRolePrompt(deleteRoleChoices))
 		.then(function (answer) {
 			var query = `DELETE FROM role WHERE ?`;
-			// after prompting, insert a new item into the db
+			// after prompting, remove item from the db
 			connection.query(query, { id: answer.roleId }, function (err, res) {
 				if (err) throw err;
 

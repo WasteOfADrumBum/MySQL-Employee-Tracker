@@ -1,5 +1,8 @@
 module.exports = {
-	/* === || INITIAL PROMPT || === */
+	// === ╔════════════════╗ ===
+	// === ║ INITIAL PROMPT ║ ===
+	// === ╚════════════════╝ ===
+
 	firstPrompt: {
 		type: "list",
 		name: "task",
@@ -28,6 +31,10 @@ module.exports = {
 		],
 	},
 
+	// === ╔═════════════════╗ ===
+	// === ║ VIEW BY PROMPTS ║ ===
+	// === ╚═════════════════╝ ===
+
 	/* === || PROMPT EMPLOYEE BY MANAGER || === */
 	viewManagerPrompt: (managerChoices) => [
 		{
@@ -47,6 +54,10 @@ module.exports = {
 			choices: departmentChoices,
 		},
 	],
+
+	// === ╔═════════════╗ ===
+	// === ║ ADD PROMPTS ║ ===
+	// === ╚═════════════╝ ===
 
 	/* === || PROMPT ADD EMPLOYEE || === */
 	insertEmployee: (departmentArray, roleArray, managerArray) => [
@@ -107,6 +118,10 @@ module.exports = {
 		},
 	],
 
+	// === ╔════════════════╗ ===
+	// === ║ UPDATE PROMPTS ║ ===
+	// === ╚════════════════╝ ===
+
 	/* === || PROMPT UPDATE ROLE || === */
 	updateRole: (employees, job) => [
 		{
@@ -138,6 +153,10 @@ module.exports = {
 			choices: employees,
 		},
 	],
+
+	// === ╔════════════════╗ ===
+	// === ║ REMOVE PROMPTS ║ ===
+	// === ╚════════════════╝ ===
 
 	/* === || PROMPT REMOVE EMPLOYEE || === */
 	deleteEmployeePrompt: (deleteEmployeeChoices) => [
