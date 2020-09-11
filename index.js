@@ -290,6 +290,7 @@ const addEmployee = () => {
 			connection.query(
 				`SELECT id, first_name, last_name FROM employee`,
 				(err, res) => {
+					if (err) throw err;
 					res.forEach((element) => {
 						managerArray.push(
 							`${element.id} ${element.first_name} ${element.last_name}`,
