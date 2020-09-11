@@ -85,6 +85,9 @@ function firstPrompt() {
 				deleteRole();
 				break; // ⛔
 			case "Exit":
+				console.log(
+					`“Goodbye, Vietnam! That’s right, I’m history, I’m outta here, I got the lucky ticket home, baby."\n- Robin Williams`,
+				);
 				connection.end();
 				break; // ⛔
 		}
