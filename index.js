@@ -345,13 +345,7 @@ function addDepartment() {
 
 /* === || ADD ROLE || === */
 function addRole() {
-	var query = `SELECT d.id, d.name, r.salary AS budget
-    FROM employee e
-    JOIN role r
-    ON e.role_id = r.id
-    JOIN department d
-    ON d.id = r.department_id
-    GROUP BY d.id, d.name`;
+	var query = `SELECT * FROM department`;
 
 	connection.query(query, function (err, res) {
 		if (err) throw err;
