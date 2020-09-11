@@ -214,6 +214,7 @@ function viewEmployeeByDepartment() {
 function viewDepartments() {
 	var query = "SELECT * FROM department";
 	connection.query(query, function (err, res) {
+		if (err) throw err;
 		console.log(`\nDEPARTMENTS:\n`);
 		res.forEach((department) => {
 			console.log(`ID: ${department.id} | ${department.name} Department`);
@@ -227,6 +228,7 @@ function viewDepartments() {
 function viewRoles() {
 	var query = "SELECT * FROM role";
 	connection.query(query, function (err, res) {
+		if (err) throw err;
 		console.log(`\nROLES:\n`);
 		res.forEach((role) => {
 			console.log(
@@ -270,12 +272,16 @@ const addEmployee = () => {
 	// Select Employee's Department
 	let departmentArray = [];
 	connection.query(`SELECT * FROM department`, (err, res) => {
+		if (err) throw err;
+
 		res.forEach((element) => {
 			departmentArray.push(`${element.id} ${element.name}`);
 		});
 		// Select Employee's Role
 		let roleArray = [];
 		connection.query(`SELECT id, title FROM role`, (err, res) => {
+			if (err) throw err;
+
 			res.forEach((element) => {
 				roleArray.push(`${element.id} ${element.title}`);
 			});
@@ -327,6 +333,7 @@ function addDepartment() {
 	inquirer.prompt(prompt.insertDepartment).then(function (answer) {
 		var query = "INSERT INTO department (name) VALUES ( ? )";
 		connection.query(query, answer.department, function (err, res) {
+			if (err) throw err;
 			console.log(
 				`You have added this department: ${answer.department.toUpperCase()}.`,
 			);
@@ -391,6 +398,8 @@ const updateEmployeeRole = () => {
 		`SELECT id, first_name, last_name
   FROM employee`,
 		(err, res) => {
+			if (err) throw err;
+
 			res.forEach((element) => {
 				employees.push(
 					`${element.id} ${element.first_name} ${element.last_name}`,
@@ -399,9 +408,12 @@ const updateEmployeeRole = () => {
 			// Select employee's new role
 			let job = [];
 			connection.query(`SELECT id, title FROM role`, (err, res) => {
+				if (err) throw err;
+
 				res.forEach((element) => {
 					job.push(`${element.id} ${element.title}`);
 				});
+
 				inquirer.prompt(prompt.updateRole(employees, job)).then((response) => {
 					// Update Employee with Chosen Role
 					let idCode = parseInt(response.update);
